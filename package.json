@@ -1,5 +1,5 @@
 {
-  "name": "col-breath-api",
+  "name": "robmill-api",
   "version": "1.0.0",
   "description": "This project is the backend of Vidly, an imaginary video rental app. I've used Vidly as an example in several of my online programming courses, such as:",
   "main": "index.js",
