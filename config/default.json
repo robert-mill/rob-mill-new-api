@@ -1,6 +1,0 @@
-{
-  "jwtPrivateKey": "unsecureKey",
-  "db": "MONGODB_URI",
-  "port": "3900",
-  "requiresAuth": false
-}
