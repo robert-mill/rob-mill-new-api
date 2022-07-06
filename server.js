@@ -1,7 +1,9 @@
 var express = require("express")
 var app = express()
+require("./startup/cors")(app);
 var db = require("./database.js")
 var md5 = require("md5")
+
 var bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
