@@ -183,8 +183,36 @@ app.patch("/api/cpp/:id", (req, res, next) => {
     var data = {
         instruction: req.body.instruction,
         description: req.body.description,
-        example : req.body.example ? req.body.example: null,
-        result: req.body.result ? req.body.result:null
+        example : req.body.example,
+        result: req.body.result
+    }
+    db.run(
+        `UPDATE cpp set 
+           instruction = COALESCE(?,instruction), 
+           description = COALESCE(?,description), 
+           example = COALESCE(?,example), 
+           result = COALESCE(?,result)
+           WHERE id = ?`,
+        [data.instruction, data.description, data.example, req.result, req.params.id],
+        function (err, result) {
+            if (err){
+                res.status(400).json({"error": res.message})
+                return;
+            }
+            res.json({
+                message: "success",
+                data: data,
+                changes: this.changes
+            })
+    });
+})
+
+app.put("/api/cpp/:id", (req, res, next) => {
+    var data = {
+        instruction: req.body.instruction,
+        description: req.body.description,
+        example : req.body.example,
+        result: req.body.result
     }
     db.run(
         `UPDATE cpp set 
