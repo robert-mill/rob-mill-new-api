@@ -117,8 +117,8 @@ app.delete("/api/users/:id", (req, res, next) => {
 })
 
 /****************** */
-app.get("/api/cpp/:id", (req, res, next) => {
-    var sql = "select * from cpp where id = ?"
+app.get("/api/courses/:id", (req, res, next) => {
+    var sql = "select * from courses where id = ?"
     var params = [req.params.id]
     db.get(sql, params, (err, row) => {
         if (err) {
@@ -131,8 +131,8 @@ app.get("/api/cpp/:id", (req, res, next) => {
         })
       });
 });
-app.get("/api/cpp", (req, res, next) => {
-    var sql = "select * from cpp"
+app.get("/api/courses", (req, res, next) => {
+    var sql = "select * from courses"
     var params = []
     db.all(sql, params, (err, rows) => {
         if (err) {
@@ -146,7 +146,7 @@ app.get("/api/cpp", (req, res, next) => {
       });
 });
 
-app.post("/api/cpp/", (req, res, next) => {
+app.post("/api/courses/", (req, res, next) => {
     var errors=[]
     if (!req.body.instruction){
         errors.push("No instruction specified");
@@ -159,13 +159,14 @@ app.post("/api/cpp/", (req, res, next) => {
         return;
     }
     var data = {
+        lang: req.body.lang,
         instruction: req.body.instruction,
         description: req.body.description,
         example : req.body.example,
-        result : req.body.result
+        results : req.body.results
     }
-    var sql ='INSERT INTO cpp (name, description, example, result) VALUES (?,?,?,?)'
-    var params =[data.instruction, data.description, data.example, data.result]
+    var sql ='INSERT INTO courses (lang, instruction, description, example, results) VALUES (?,?,?,?,?)'
+    var params =[data.lang, data.instruction, data.description, data.example, data.results]
     db.run(sql, params, function (err, result) {
         if (err){
             res.status(400).json({"error": err.message})
@@ -179,21 +180,23 @@ app.post("/api/cpp/", (req, res, next) => {
     });
 })
 
-app.patch("/api/cpp/:id", (req, res, next) => {
+app.patch("/api/courses/:id", (req, res, next) => {
     var data = {
+        lang: req.body.lang,
         instruction: req.body.instruction,
         description: req.body.description,
-        example : req.body.example,
-        result: req.body.result
+        example: req.body.example,
+        results: req.body.results
     }
     db.run(
-        `UPDATE cpp set 
-           instruction = COALESCE(?,instruction), 
-           description = COALESCE(?,description), 
-           example = COALESCE(?,example), 
-           result = COALESCE(?,result)
-           WHERE id = ?`,
-        [data.instruction, data.description, data.example, req.result, req.params.id],
+        `UPDATE courses set 
+            lang = COALESCE(?,lang),
+            instruction = COALESCE(?,instruction), 
+            description = COALESCE(?,description), 
+            example = COALESCE(?,example), 
+            results = COALESCE(?,results)
+            WHERE id = ?`,
+        [data.lang,data.instruction, data.description, data.example, req.results, req.params.id],
         function (err, result) {
             if (err){
                 res.status(400).json({"error": res.message})
@@ -207,21 +210,23 @@ app.patch("/api/cpp/:id", (req, res, next) => {
     });
 })
 
-app.put("/api/cpp/:id", (req, res, next) => {
+app.put("/api/courses/:id", (req, res, next) => {
     var data = {
+        lang: req.body.lang,
         instruction: req.body.instruction,
         description: req.body.description,
         example : req.body.example,
-        result: req.body.result
+        results: req.body.results
     }
     db.run(
-        `UPDATE cpp set 
+        `UPDATE course set 
+           lang = COALESCE(?,lang), 
            instruction = COALESCE(?,instruction), 
            description = COALESCE(?,description), 
            example = COALESCE(?,example), 
-           result = COALESCE(?,result)
+           results = COALESCE(?,results)
            WHERE id = ?`,
-        [data.instruction, data.description, data.example, req.result, req.params.id],
+        [data.lang, data.instruction, data.description, data.example, req.results, req.params.id],
         function (err, result) {
             if (err){
                 res.status(400).json({"error": res.message})
@@ -235,9 +240,9 @@ app.put("/api/cpp/:id", (req, res, next) => {
     });
 })
 
-app.delete("/api/cpp/:id", (req, res, next) => {
+app.delete("/api/courses/:id", (req, res, next) => {
     db.run(
-        'DELETE FROM cpp WHERE id = ?',
+        'DELETE FROM courses WHERE id = ?',
         req.params.id,
         function (err, result) {
             if (err){
