@@ -13,25 +13,21 @@ let db = new sqlite3.Database(DBSOURCE, (err) => {
         db.run(`CREATE TABLE courses (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             lang text,
-            instruction text,
             description text, 
-            example text, 
-            results text
+            instruction text
             )`,(err) => {
         if (err) {
         }else{
-            var insert = 'INSERT INTO courses (lang,instruction, description, example, results) VALUES (?,?,?,?,?)'
+            var insert = 'INSERT INTO courses (lang,description,instruction) VALUES (?,?,?)'
             db.run(insert, ["C++",
                             "In terminal type \‘g++\’",
-                            "If error everything is ok else If not say yes to questions",
-                            "g++",
-                            "Results go here"])
+                            "If error everything is ok else If not say yes to questions"
+                            ])
             db.run(insert, [
                             "C++",
                             "Open visual studio code",
-                            "create new folder called C++, or your project name",
-                            "Cd to folder",
-                            "Added results "])
+                            "create new folder called C++, or your project name"
+                            ])
         }
     })  
     }

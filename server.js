@@ -160,13 +160,12 @@ app.post("/api/courses/", (req, res, next) => {
     }
     var data = {
         lang: req.body.lang,
-        instruction: req.body.instruction,
         description: req.body.description,
-        example : req.body.example,
-        results : req.body.results
+        instruction: req.body.instruction
+       
     }
-    var sql ='INSERT INTO courses (lang, instruction, description, example, results) VALUES (?,?,?,?,?)'
-    var params =[data.lang, data.instruction, data.description, data.example, data.results]
+    var sql ='INSERT INTO courses (lang, description,instruction ) VALUES (?,?,?)'
+    var params =[data.lang,data.description, data.instruction  ]
     db.run(sql, params, function (err, result) {
         if (err){
             res.status(400).json({"error": err.message})
@@ -183,20 +182,17 @@ app.post("/api/courses/", (req, res, next) => {
 app.patch("/api/courses/:id", (req, res, next) => {
     var data = {
         lang: req.body.lang,
-        instruction: req.body.instruction,
         description: req.body.description,
-        example: req.body.example,
-        results: req.body.results
+        instruction: req.body.instruction
+        
     }
     db.run(
         `UPDATE courses set 
             lang = COALESCE(?,lang),
-            instruction = COALESCE(?,instruction), 
-            description = COALESCE(?,description), 
-            example = COALESCE(?,example), 
-            results = COALESCE(?,results)
+            description = COALESCE(?,description),
+            instruction = COALESCE(?,instruction)
             WHERE id = ?`,
-        [data.lang,data.instruction, data.description, data.example, req.results, req.params.id],
+        [data.lang,data.description, data.instruction, req.params.id],
         function (err, result) {
             if (err){
                 res.status(400).json({"error": res.message})
@@ -213,20 +209,16 @@ app.patch("/api/courses/:id", (req, res, next) => {
 app.put("/api/courses/:id", (req, res, next) => {
     var data = {
         lang: req.body.lang,
-        instruction: req.body.instruction,
         description: req.body.description,
-        example : req.body.example,
-        results: req.body.results
+        instruction: req.body.instruction
     }
     db.run(
         `UPDATE course set 
            lang = COALESCE(?,lang), 
-           instruction = COALESCE(?,instruction), 
            description = COALESCE(?,description), 
-           example = COALESCE(?,example), 
-           results = COALESCE(?,results)
+           instruction = COALESCE(?,instruction)
            WHERE id = ?`,
-        [data.lang, data.instruction, data.description, data.example, req.results, req.params.id],
+        [data.lang, data.description, data.instruction, req.params.id],
         function (err, result) {
             if (err){
                 res.status(400).json({"error": res.message})
